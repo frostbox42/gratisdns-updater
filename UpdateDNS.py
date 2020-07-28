@@ -1,27 +1,22 @@
-import configparser
-import socket
-import urllib.request
-import requests
-import time
 import os
+import socket
+import time
+import urllib.request
 
 
 def getRootDomain(url):
-    domainSplit = url.split(".")
-    rootDomain = domainSplit[-2] + '.' + domainSplit[-1]
-    return rootDomain
+    if url is not None:
+        domainSplit = url.split(".")
+        rootDomain = domainSplit[-2] + '.' + domainSplit[-1]
+        return rootDomain
+    else:
+        return ''
+
 
 def update_dns():
-    Username = os.getenv('USERNAME', '')
-    Password = os.getenv('PASSWORD', '')
-    DynamicDomain = os.getenv('DOMAIN', '')
-    AccountDomain = getRootDomain(DynamicDomain)
-    updateUrl = "https://ssl.gratisdns.dk/ddns.phtml?"
-    remoteUrl = "https://checkip.amazonaws.com"
-
     # GET IP FROM WEBSITE
     hostIP = str.strip(urllib.request.urlopen(remoteUrl).read().decode('utf8'))
-    
+
     # COMPARE DNS TO HOST IP
     domainIP = socket.gethostbyname(DynamicDomain)
 
@@ -32,7 +27,20 @@ def update_dns():
         message = DynamicDomain + ": IP Changed ({} --> {})".format(domainIP, hostIP)
         print(time.ctime(), ":", message)
 
+
 if __name__ == "__main__":
-    while True:
-        update_dns()
-        time.sleep(3600)
+
+    Username = os.getenv('USERNAME', None)
+    Password = os.getenv('PASSWORD', None)
+    DynamicDomain = os.getenv('DOMAIN', None)
+    AccountDomain = getRootDomain(DynamicDomain)
+    UpdateFrequency = os.getenv("UPDATEEVERY", 3600)
+    updateUrl = "https://ssl.gratisdns.dk/ddns.phtml?"
+    remoteUrl = "https://checkip.amazonaws.com"
+
+    if None not in (Username, Password, DynamicDomain):
+        while True:
+            update_dns()
+            time.sleep(UpdateFrequency)
+    else:
+        exit(1)
