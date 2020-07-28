@@ -1,0 +1,10 @@
+version: "3"
+services:
+  dnsupdater:
+    build: .
+    container_name: dnsupdater
+    restart: always
+    environment:
+      USERNAME: '--INSERT USERNAME--'
+      PASSWORD: '--INSERT PASSWORD--'
+      DOMAIN: '--INSERT DOMAIN TO UPDATE--'
