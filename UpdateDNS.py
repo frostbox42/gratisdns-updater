@@ -34,7 +34,7 @@ if __name__ == "__main__":
     Password = os.getenv('PASSWORD', None)
     DynamicDomain = os.getenv('DOMAIN', None)
     AccountDomain = getRootDomain(DynamicDomain)
-    UpdateFrequency = os.getenv("UPDATEEVERY", 3600)
+    UpdateFrequency = int(os.getenv("UPDATEEVERY", 3600))
     updateUrl = "https://ssl.gratisdns.dk/ddns.phtml?"
     remoteUrl = "https://checkip.amazonaws.com"
 
